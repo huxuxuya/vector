@@ -1,0 +1,91 @@
+GET _search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+PUT /vector-2023.09.05/_mapping
+{
+"properties": {
+"user": {
+"type": "long"
+  }
+  }
+}
+
+
+PUT /vector_new_index7
+{
+  "mappings": {
+    "properties": {
+      "DataBase": {
+        "type": "keyword"
+      },
+      "ComputerName": {
+        "type": "keyword"
+      },
+      "DateTime": {
+        "type": "date",
+        "format": "yyyy-MM-dd' 'HH:mm:ss.SSSSSS"
+      },
+      
+      "Event": {
+        "type": "keyword"
+      },
+      "Level": {
+        "type": "keyword"
+      },
+      
+      "ProcessName": {
+        "type": "keyword"
+      },
+      "User": {
+        "type": "keyword"
+      },
+      "host": {
+        "type": "keyword"
+      },
+      "source_type": {
+        "type": "keyword"
+      },
+
+      
+      "duration": {
+        "type": "long"
+      }
+    }
+  }
+}
+
+POST /_reindex
+{
+  "source": {
+    "index": "vector-2023.09.05"
+  },
+  "dest": {
+    "index": "vector_new_index"
+  }
+}
+
+DELETE /old_index
+
+POST /_aliases
+{
+  "actions": [
+    {
+      "remove": {
+        "index": "old_index",
+        "alias": "my_alias"
+      }
+    },
+    {
+      "add": {
+        "index": "new_index",
+        "alias": "my_alias"
+      }
+    }
+  ]
+}
+
+

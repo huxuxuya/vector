@@ -1,4 +1,4 @@
-# **Vector_TechJournal.** Парсинг технологического журнала 1С
+# **Vector_TechJournal.** Парсинг технологического журнала 1С (elastic)
 
 
 - [Назначение](#назначение)
@@ -40,22 +40,29 @@
 ## Запуск
 
 Для запуска разбора технологического журнала достаточно:
-- Подготовить базу данных clickhouse
-    - Создать базу 
-    - Создать таблицы скриптами из папки [sql_scripts](/sql_scripts)
-- Переименовать [docker-compose.yaml.example](/docker-compose.yaml.example) в **docker-compose.yaml**, и [techJournal.env.example](/techJournal.env.example) в **techJournal.env**  
-- Отредактировать файл techJournal.env
+
+Отредактировать файл techJournal.env
     - указать необходимые события которые вы планируете хранить
-    - Задать параметры авторизации в Clickhouse
-- В файле [docker-compose.yaml](/docker-compose.yaml.example) указать в Volume параметры подключения к папке с логами.   
-- docker-compose up -d    
+
+Выполнить команду:
+    docker-compose -f es-vector-docker-compose.yml up -d
+
+Положить логи в ./logs
+
+В кибане появятся записи http://localhost:5601/.
+
+Можно настроить еще индексы [elastic set index](/elastic set index) 
+
+Еще можно отключить сообщение секурности:
+    docker exec -it <container_id> bash
+    cd /usr/share/elasticsearch/config
+    echo "xpack.security.enabled: false" >> elasticsearch.yml
 
 ## Планы
 - Дописать разбор самых востребованых событий.
 - Отладить и оптимизировать разбор.
 - Добавить словари для "Очеловечивания" информации
 - Реализовать фронтенд для удобного просмотра и анализа ТЖ
-
 
 ---
 
