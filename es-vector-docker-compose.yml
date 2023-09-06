@@ -1,0 +1,43 @@
+version: "3.7"
+networks:
+ dev-net:
+  name: dev-net
+  driver: bridge
+services:
+  elasticsearch:    
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+    container_name: elasticsearch
+    restart: unless-stopped
+    networks:
+      - dev-net
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.15.0  
+    container_name: kibana
+    restart: unless-stopped
+    networks:
+      - dev-net
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+  vector:
+    image: timberio/vector:latest-alpine
+    env_file:
+      - ./techJournal.env.example
+    hostname: vector_techJournal
+    container_name: vector_techJournal
+    restart: always
+    networks:
+      - dev-net
+    volumes:
+      - ./config:/etc/vector/
+      - ./fileProgress:/var/lib/vector
+      - ./logs:/var/log/logtj
+      - ./tmp:/tmp
+    ports:
+      - 8686:8686

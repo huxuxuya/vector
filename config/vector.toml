@@ -36,7 +36,7 @@ starts_when = { type = "vrl", source = '''.Event != "Context"''' }
 [transforms.filter_EVENT_LIST] 
   inputs = ["add_context_event"]
   type = "filter"
-  condition = '''contains(${EVENT_LIST}, to_string!(.Event))'''
+  condition = '''contains("${EVENT_LIST}", to_string!(.Event))'''
 
 #################################### СЕКЦИЯ СОБЫТИЙ ##########################################################
 # Каждое событие ТЖ обрабатывается отдельно                                                                  #
@@ -158,210 +158,65 @@ file = "/etc/vector/transforms/SCALL.vrl"
 #################################################################################
 
 #####################################
-#  Вывод результата в БД clickhouse #
+#  Вывод результата в БД elasticsearch #
 #####################################
 
 # Событие EXCP 
 [sinks.cl_excp]
- type = "clickhouse"
+ type = "elasticsearch"
  inputs = ["EXCP"]
- endpoint = '''${CH_SERVER}'''
- auth.strategy = "basic"
- auth.user = '''${CH_USER}'''
- auth.password = '''${CH_PASSWORD}'''
- database = '''${CH_DATABASE}'''
- table = '''excp'''
- skip_unknown_fields = true
- batch.max_events = 10000
- batch.timeout_secs = 5
- acknowledgements.enabled = true
+ endpoints = ['''${ES_SERVER}'''] # example, no default
 
  # Событие EXCPCNTX 
 [sinks.cl_EXCPCNTX]
- type = "clickhouse"
+ type = "elasticsearch"
  inputs = ["EXCPCNTX"]
- endpoint = '''${CH_SERVER}'''
- auth.strategy = "basic"
- auth.user = '''${CH_USER}'''
- auth.password = '''${CH_PASSWORD}'''
- database = '''${CH_DATABASE}'''
- table = '''excpcntx'''
- skip_unknown_fields = true
- batch.max_events = 10000
- batch.timeout_secs = 5
- acknowledgements.enabled = true
+ endpoints = ['''${ES_SERVER}'''] # example, no default
 
  # Событие DBMSSQL 
 [sinks.cl_DBMSSQL]
- type = "clickhouse"
+ type = "elasticsearch"
  inputs = ["DBMSSQL"]
- endpoint = '''${CH_SERVER}'''
- auth.strategy = "basic"
- auth.user = '''${CH_USER}'''
- auth.password = '''${CH_PASSWORD}'''
- database = '''${CH_DATABASE}'''
- table = '''dbmssql'''
- skip_unknown_fields = true
- batch.max_events = 10000
- batch.timeout_secs = 5
- acknowledgements.enabled = true
+ endpoints = ['''${ES_SERVER}'''] # example, no default
 
 # Событие SDBL 
 [sinks.cl_SDBL]
- type = "clickhouse"
- inputs = ["SDBL"]
- endpoint = '''${CH_SERVER}'''
- auth.strategy = "basic"
- auth.user = '''${CH_USER}'''
- auth.password = '''${CH_PASSWORD}'''
- database = '''${CH_DATABASE}'''
- table = '''sdbl'''
- skip_unknown_fields = true
- batch.max_events = 10000
- batch.timeout_secs = 5
- acknowledgements.enabled = true
+type = "elasticsearch" # must be: "elasticsearch"
+inputs = ["SDBL"] # example
+endpoints = ['''${ES_SERVER}'''] # example, no default
 
 # Событие TLOCK 
 [sinks.cl_TLOCK]
- type = "clickhouse"
+ type = "elasticsearch"
  inputs = ["TLOCK"]
- endpoint = '''${CH_SERVER}'''
- auth.strategy = "basic"
- auth.user = '''${CH_USER}'''
- auth.password = '''${CH_PASSWORD}'''
- database = '''${CH_DATABASE}'''
- table = '''tlock'''
- skip_unknown_fields = true
- batch.max_events = 10000
- batch.timeout_secs = 5
- acknowledgements.enabled = true
+ endpoints = ['''${ES_SERVER}'''] # example, no default
 
  # Событие TTIMEOUT 
 [sinks.cl_TTIMEOUT]
- type = "clickhouse"
+ type = "elasticsearch"
  inputs = ["TTIMEOUT"]
- endpoint = '''${CH_SERVER}'''
- auth.strategy = "basic"
- auth.user = '''${CH_USER}'''
- auth.password = '''${CH_PASSWORD}'''
- database = '''${CH_DATABASE}'''
- table = '''ttimeout'''
- skip_unknown_fields = true
- batch.max_events = 10000
- batch.timeout_secs = 5
- acknowledgements.enabled = true
+ endpoints = ['''${ES_SERVER}'''] # example, no default
 
  # Событие TDEADLOCK 
 [sinks.cl_TDEADLOCK]
- type = "clickhouse"
+ type = "elasticsearch"
  inputs = ["TDEADLOCK"]
- endpoint = '''${CH_SERVER}'''
- auth.strategy = "basic"
- auth.user = '''${CH_USER}'''
- auth.password = '''${CH_PASSWORD}'''
- database = '''${CH_DATABASE}'''
- table = '''tdeadlock'''
- skip_unknown_fields = true
- batch.max_events = 10000
- batch.timeout_secs = 5
- acknowledgements.enabled = true
+ endpoints = ['''${ES_SERVER}'''] # example, no default
 
 # Событие QERR 
 [sinks.cl_QERR]
- type = "clickhouse"
+ type = "elasticsearch"
  inputs = ["QERR"]
- endpoint = '''${CH_SERVER}'''
- auth.strategy = "basic"
- auth.user = '''${CH_USER}'''
- auth.password = '''${CH_PASSWORD}'''
- database = '''${CH_DATABASE}'''
- table = '''qerr'''
- skip_unknown_fields = true
- batch.max_events = 10000
- batch.timeout_secs = 5
- acknowledgements.enabled = true
+ endpoints = ['''${ES_SERVER}'''] # example, no default
 
  # Событие CALL 
 [sinks.cl_CALL]
- type = "clickhouse"
+ type = "elasticsearch"
  inputs = ["CALL"]
- endpoint = '''${CH_SERVER}'''
- auth.strategy = "basic"
- auth.user = '''${CH_USER}'''
- auth.password = '''${CH_PASSWORD}'''
- database = '''${CH_DATABASE}'''
- table = '''call'''
- skip_unknown_fields = true
- batch.max_events = 10000
- batch.timeout_secs = 5
- acknowledgements.enabled = true
+ endpoints = ['''${ES_SERVER}'''] # example, no default
 
 # Событие SCALL 
-[sinks.cl_CALL]
- type = "clickhouse"
+[sinks.cl_SCALL]
+ type = "elasticsearch"
  inputs = ["SCALL"]
- endpoint = '''${CH_SERVER}'''
- auth.strategy = "basic"
- auth.user = '''${CH_USER}'''
- auth.password = '''${CH_PASSWORD}'''
- database = '''${CH_DATABASE}'''
- table = '''scall'''
- skip_unknown_fields = true
- batch.max_events = 10000
- batch.timeout_secs = 5
- acknowledgements.enabled = true
-
-
-##################################################
-# Пример вывода результата в файл, в формате JSON#
-##################################################
-
-# [sinks.EXCP_json_out]
-# type = "file"
-# inputs = [ "EXCP" ]
-# compression = "none"
-# path = "/tmp/EXCP/%Y-%m-%d %H:%M.json"
-
-  
-#   [sinks.EXCP_json_out.encoding]
-#   codec = "json"
-
-# [sinks.EXCPCNTX_json_out]
-# type = "file"
-# inputs = [ "EXCPCNTX" ]
-# compression = "none"
-# path = "/tmp/EXCPCNTX/%Y-%m-%d %H:%M.json"
-
-  
-#   [sinks.EXCPCNTX_json_out.encoding]
-#   codec = "json"
-
-#   [sinks.DBMSSQL_json_out]
-# type = "file"
-# inputs = [ "DBMSSQL" ]
-# compression = "none"
-# path = "/tmp/DBMSSQL/%Y-%m-%d %H:%M.json"
-
-  
-#   [sinks.DBMSSQL_json_out.encoding]
-#   codec = "json"
-
-# [sinks.SDBL_json_out]
-# type = "file"
-# inputs = [ "SDBL" ]
-# compression = "none"
-# path = "/tmp/SDBL/%Y-%m-%d %H:%M.json"
-
-  
-#   [sinks.SDBL_json_out.encoding]
-#   codec = "json"
-
-# [sinks.QERR_json_out]
-# type = "file"
-# inputs = [ "QERR" ]
-# compression = "none"
-# path = "/tmp/QERR/%Y-%m-%d %H:%M.json"
-
-  
-#   [sinks.QERR_json_out.encoding]
-#   codec = "json"
+ endpoints = ['''${ES_SERVER}'''] # example, no default
